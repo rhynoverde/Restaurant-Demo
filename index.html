@@ -1,0 +1,163 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Disable default pinch zoom on the page -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Restaurant Demo - Version r-1.0.0</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Include Cropper.js CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.css" rel="stylesheet">
+  <!-- Include SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Step 1: Photo Selection & Capture -->
+    <section id="step1" class="step active">
+      <div class="form-section">
+        <div id="photoOptions" class="photo-options">
+          <button type="button" class="photo-option" data-option="take">
+            <span class="icon">📷</span>
+            <span class="label">Take Photo</span>
+          </button>
+          <button type="button" class="photo-option" data-option="upload">
+            <span class="icon">⬆️</span>
+            <span class="label">Upload Photo</span>
+          </button>
+        </div>
+
+        <!-- Take Photo Section -->
+        <div id="takePhotoSection" class="photo-section" style="display:none;">
+          <div id="cameraContainer">
+            <video id="cameraPreview" autoplay playsinline></video>
+            <div id="cameraOverlay">
+              <div class="hole"></div>
+            </div>
+            <div id="zoomIndicator" class="zoom-indicator" style="display:none;">Zooming...</div>
+          </div>
+          <div class="camera-controls">
+            <button type="button" id="swapCamera" class="icon-btn">↺</button>
+            <button type="button" id="capturePhoto" class="shutter-btn"></button>
+            <button type="button" id="flashToggle" class="icon-btn flash-off">⚡</button>
+          </div>
+        </div>
+
+        <!-- Upload Photo Section -->
+        <div id="uploadPhotoSection" class="photo-section" style="display:none;">
+          <p>Please choose a photo to upload:</p>
+          <input type="file" id="uploadInput" accept="image/*" />
+          <label for="uploadInput" class="upload-label">Select Photo</label>
+          <button type="button" class="backToOptions">← Back</button>
+        </div>
+
+        <!-- Cropping Section -->
+        <div id="cropSection" class="photo-section" style="display:none;">
+          <p>Adjust the photo if needed.</p>
+          <div id="cropContainer">
+            <img id="cropImage" src="" alt="To be cropped" />
+          </div>
+          <div class="crop-buttons">
+            <button type="button" id="cropButton">Crop</button>
+            <button type="button" id="fitEntireButton">Fit Entire Image</button>
+            <button type="button" id="changePhoto">Change Photo</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 2: Share Image -->
+    <section id="vehicleSharePage" class="step">
+      <div class="form-section">
+        <h2>Your Dish is Ready to Share!</h2>
+        <div class="share-image-container">
+          <img id="vehicleShareImage" src="" alt="Dish Share Image" />
+        </div>
+        <button type="button" id="shareNowButton" class="share-button">Share Image</button>
+        <button type="button" id="forwardFromVehicleShare">Next</button>
+        <button type="button" id="backFromVehicleShare">← Back</button>
+      </div>
+    </section>
+
+    <!-- Review Form Page -->
+    <section id="reviewFormPage" class="step">
+      <div class="form-section">
+        <h2>Write a Quick Review</h2>
+        <div class="star-rating" id="reviewStarRating">
+          <span data-value="1">&#9733;</span>
+          <span data-value="2">&#9733;</span>
+          <span data-value="3">&#9733;</span>
+          <span data-value="4">&#9733;</span>
+          <span data-value="5">&#9733;</span>
+        </div>
+        <textarea id="reviewText" placeholder="Write your review here (max 130 characters)" maxlength="130"></textarea>
+        <div id="charCount">130 characters left</div>
+        <button type="button" id="submitReviewForm">Create Review Image</button>
+        <button type="button" id="backFromReviewForm">← Back</button>
+      </div>
+    </section>
+
+    <!-- Review Share Page -->
+    <section id="reviewSharePage" class="step">
+      <div class="form-section">
+        <h2>Share Your Review</h2>
+        <div class="share-image-container">
+          <img id="reviewShareImage" src="" alt="Review Share Image" />
+        </div>
+        <button type="button" id="reviewShareButton" class="share-button">Share Image</button>
+        <button type="button" id="forwardFromReviewShare">Next</button>
+        <button type="button" id="backFromReviewShare">← Back</button>
+      </div>
+    </section>
+
+    <!-- Google Review Page -->
+    <section id="googleReviewPage" class="step">
+      <div class="form-section">
+        <h2>Thank You!</h2>
+        <p>Would you please paste your review onto our Google profile? It really helps!</p>
+        <button type="button" id="googleReviewButton">Paste Review on Google</button>
+        <button type="button" id="backFromGoogleReview">← Back</button>
+        <button type="button" id="forwardFromGoogleReview">Next</button>
+      </div>
+    </section>
+
+    <!-- Final Options Page -->
+    <section id="finalOptionsPage" class="step">
+      <div class="form-section">
+        <h2>All Done! Thanks for Helping Us!</h2>
+        <p>If you'd like to save or share your images, here they are:</p>
+        <div class="accordion">
+          <details>
+            <summary>Dish Image</summary>
+            <div class="share-image-container accordion-content">
+              <img id="finalVehicleShareImage" src="" alt="Dish Image" />
+              <button type="button" id="shareVehicleFinalButton" class="share-button">Share</button>
+            </div>
+          </details>
+          <details>
+            <summary>Review Image</summary>
+            <div class="share-image-container accordion-content">
+              <img id="finalReviewShareImage" src="" alt="Review Image" />
+              <button type="button" id="shareReviewFinalButton" class="share-button">Share</button>
+            </div>
+          </details>
+        </div>
+        <textarea id="finalReviewText" placeholder="Your review will appear here..."></textarea>
+        <button type="button" id="copyReviewText">Copy Review Text</button>
+        <button type="button" id="backFromFinalOptions">← Back</button>
+      </div>
+    </section>
+
+  </div>
+
+  <footer id="pageFooter">
+    <span class="footer-version">Version r-1.0.0</span>
+  </footer>
+
+  <!-- Include Cropper.js and our script.js -->
+  <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
