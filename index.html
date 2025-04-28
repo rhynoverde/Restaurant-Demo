@@ -1,163 +1,377 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <!-- Disable default pinch zoom on the page -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Restaurant Demo - Version r-1.0.0</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+  <title>Restaurant Demo – Seb’s Crescent City Bistro</title>
+
+  <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
-  <!-- Include Cropper.js CSS -->
+
+  <!-- Cropper & SweetAlert2 -->
   <link href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.css" rel="stylesheet">
-  <!-- Include SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
-  <div class="container">
+<div class="container">
 
-    <!-- Step 1: Photo Selection & Capture -->
-    <section id="step1" class="step active">
-      <div class="form-section">
-        <div id="photoOptions" class="photo-options">
-          <button type="button" class="photo-option" data-option="take">
-            <span class="icon">📷</span>
-            <span class="label">Take Photo</span>
-          </button>
-          <button type="button" class="photo-option" data-option="upload">
-            <span class="icon">⬆️</span>
-            <span class="label">Upload Photo</span>
-          </button>
+  <!-- Holds the ORIGINAL photo the moment it’s chosen -->
+  <img id="originalPhoto" src="" style="display:none;">
+
+  <!-- ── STEP 1 • Intro ────────────────────────────────────────────── -->
+  <section id="step1" class="step active">
+    <div class="form-section business-info">
+      <div class="business-images">
+        <!-- Left: soft-drink       -->
+        <img class="biz-logo"    src="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/Beverages-1080x1080.jpg"
+              alt="Signature Beverage">
+        <!-- Centre: restaurant logo -->
+        <img class="biz-owner"   src="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/Sebs-Crescent-City-Bistro-Logo+_500x500.jpg"
+              alt="Seb’s Crescent City Bistro Logo">
+        <!-- Right: dessert          -->
+        <img class="biz-product" src="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/All-Deserts_1080x1080.jpg"
+              alt="Dessert Special">
+      </div>
+
+      <h2 class="business-tagline">
+        Share a photo of your entrée and receive a free&nbsp;(non-alcoholic) beverage<br>
+        <span style="font-size:90%;">or half&nbsp;off any dessert&nbsp;today!<br>It’s quick and easy&nbsp;🙂</span>
+      </h2>
+
+      <div class="photo-options intro-options">
+        <button id="takePhotoButton"   class="photo-option">
+          <span class="icon">📷</span><span class="label">Take a Photo</span>
+        </button>
+        <button id="galleryButton"     class="photo-option">
+          <span class="icon">🖼️</span><span class="label">Use a Photo from our Gallery</span>
+        </button>
+        <button id="uploadPhotoButton" class="photo-option">
+          <span class="icon">⬆️</span><span class="label">Upload a Photo from your Phone</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STEP 2 • Choose / Capture Image ───────────────────────────── -->
+  <section id="step2" class="step">
+    <div class="form-section">
+
+      <div id="photoOptions" class="photo-options">
+        <button class="photo-option" data-option="take">
+          <span class="icon">📷</span><span class="label">Take Photo</span>
+        </button>
+        <button class="photo-option" data-option="upload">
+          <span class="icon">⬆️</span><span class="label">Upload Photo</span>
+        </button>
+        <button class="photo-option" data-option="url">
+          <span class="icon">🔗</span><span class="label">Paste Image URL</span>
+        </button>
+      </div>
+
+      <!-- Camera -->
+      <div id="takePhotoSection" class="photo-section" style="display:none;">
+        <h2 class="minor-title">Take a Photo of Your Entrée</h2>
+
+        <div id="cameraContainer">
+          <video id="cameraPreview" autoplay playsinline muted webkit-playsinline></video>
+          <div id="cameraOverlay"><div class="hole"></div></div>
+          <div id="zoomIndicator" class="zoom-indicator" style="display:none;">Zooming…</div>
         </div>
 
-        <!-- Take Photo Section -->
-        <div id="takePhotoSection" class="photo-section" style="display:none;">
-          <div id="cameraContainer">
-            <video id="cameraPreview" autoplay playsinline></video>
-            <div id="cameraOverlay">
-              <div class="hole"></div>
+        <div class="camera-controls">
+          <button id="swapCamera"  class="icon-btn">↺</button>
+          <button id="capturePhoto" class="shutter-btn"></button>
+          <button id="flashToggle" class="icon-btn flash-off">⚡</button>
+        </div>
+
+        <button id="cameraBack" class="backToOptions">← Back</button>
+      </div>
+
+      <!-- Upload -->
+      <div id="uploadPhotoSection" class="photo-section" style="display:none;">
+        <h2 class="minor-title">Choose a Photo of Your Entrée</h2>
+        <input type="file" id="uploadInput" accept="image/*">
+        <label for="uploadInput" class="upload-label">Choose Photo</label>
+        <button class="backToOptions">← Back</button>
+      </div>
+
+      <!-- Paste URL -->
+      <div id="urlPhotoSection" class="photo-section" style="display:none;">
+        <p>Enter an image URL:</p>
+        <label for="imageUrlInput" class="input-label">Image URL</label>
+        <input type="url" id="imageUrlInput" placeholder="https://example.com/photo.jpg">
+        <button id="loadUrlImage">Load Image</button>
+        <button class="backToOptions">← Back</button>
+      </div>
+
+      <!-- Crop -->
+      <div id="cropSection" class="photo-section" style="display:none;">
+        <h2 class="minor-title">Crop Your Photo</h2>
+        <div id="cropContainer"><img id="cropImage" src="" alt="To be cropped"></div>
+        <div class="crop-buttons">
+          <button id="cropButton">Crop</button>
+          <button id="fitEntireButton">Fit Entire Image</button>
+          <button id="changePhoto">Change Photo</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── STEP 2b • Gallery ─────────────────────────────────────────── -->
+  <section id="galleryPage" class="step">
+    <div class="form-section">
+      <h2>Select an Entrée Photo</h2>
+
+      <div class="accordion">
+
+        <!-- Crescent City Shrimp & Grits -->
+        <details>
+          <summary>🎷 Crescent City Shrimp and Grits 🍤</summary>
+          <div class="entree-gallery">
+            <div class="entree-block">
+              <img src="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/Crescent+City+Shrimp+and+Grits-customerStyle.jpg"
+                   alt="Crescent City Shrimp and Grits – style 1">
+              <button class="share-entree-button"
+                      data-image="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/Crescent+City+Shrimp+and+Grits-customerStyle.jpg"
+                      data-entree="Crescent City Shrimp and Grits">Share This Photo</button>
             </div>
-            <div id="zoomIndicator" class="zoom-indicator" style="display:none;">Zooming...</div>
-          </div>
-          <div class="camera-controls">
-            <button type="button" id="swapCamera" class="icon-btn">↺</button>
-            <button type="button" id="capturePhoto" class="shutter-btn"></button>
-            <button type="button" id="flashToggle" class="icon-btn flash-off">⚡</button>
-          </div>
-        </div>
-
-        <!-- Upload Photo Section -->
-        <div id="uploadPhotoSection" class="photo-section" style="display:none;">
-          <p>Please choose a photo to upload:</p>
-          <input type="file" id="uploadInput" accept="image/*" />
-          <label for="uploadInput" class="upload-label">Select Photo</label>
-          <button type="button" class="backToOptions">← Back</button>
-        </div>
-
-        <!-- Cropping Section -->
-        <div id="cropSection" class="photo-section" style="display:none;">
-          <p>Adjust the photo if needed.</p>
-          <div id="cropContainer">
-            <img id="cropImage" src="" alt="To be cropped" />
-          </div>
-          <div class="crop-buttons">
-            <button type="button" id="cropButton">Crop</button>
-            <button type="button" id="fitEntireButton">Fit Entire Image</button>
-            <button type="button" id="changePhoto">Change Photo</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Step 2: Share Image -->
-    <section id="vehicleSharePage" class="step">
-      <div class="form-section">
-        <h2>Your Dish is Ready to Share!</h2>
-        <div class="share-image-container">
-          <img id="vehicleShareImage" src="" alt="Dish Share Image" />
-        </div>
-        <button type="button" id="shareNowButton" class="share-button">Share Image</button>
-        <button type="button" id="forwardFromVehicleShare">Next</button>
-        <button type="button" id="backFromVehicleShare">← Back</button>
-      </div>
-    </section>
-
-    <!-- Review Form Page -->
-    <section id="reviewFormPage" class="step">
-      <div class="form-section">
-        <h2>Write a Quick Review</h2>
-        <div class="star-rating" id="reviewStarRating">
-          <span data-value="1">&#9733;</span>
-          <span data-value="2">&#9733;</span>
-          <span data-value="3">&#9733;</span>
-          <span data-value="4">&#9733;</span>
-          <span data-value="5">&#9733;</span>
-        </div>
-        <textarea id="reviewText" placeholder="Write your review here (max 130 characters)" maxlength="130"></textarea>
-        <div id="charCount">130 characters left</div>
-        <button type="button" id="submitReviewForm">Create Review Image</button>
-        <button type="button" id="backFromReviewForm">← Back</button>
-      </div>
-    </section>
-
-    <!-- Review Share Page -->
-    <section id="reviewSharePage" class="step">
-      <div class="form-section">
-        <h2>Share Your Review</h2>
-        <div class="share-image-container">
-          <img id="reviewShareImage" src="" alt="Review Share Image" />
-        </div>
-        <button type="button" id="reviewShareButton" class="share-button">Share Image</button>
-        <button type="button" id="forwardFromReviewShare">Next</button>
-        <button type="button" id="backFromReviewShare">← Back</button>
-      </div>
-    </section>
-
-    <!-- Google Review Page -->
-    <section id="googleReviewPage" class="step">
-      <div class="form-section">
-        <h2>Thank You!</h2>
-        <p>Would you please paste your review onto our Google profile? It really helps!</p>
-        <button type="button" id="googleReviewButton">Paste Review on Google</button>
-        <button type="button" id="backFromGoogleReview">← Back</button>
-        <button type="button" id="forwardFromGoogleReview">Next</button>
-      </div>
-    </section>
-
-    <!-- Final Options Page -->
-    <section id="finalOptionsPage" class="step">
-      <div class="form-section">
-        <h2>All Done! Thanks for Helping Us!</h2>
-        <p>If you'd like to save or share your images, here they are:</p>
-        <div class="accordion">
-          <details>
-            <summary>Dish Image</summary>
-            <div class="share-image-container accordion-content">
-              <img id="finalVehicleShareImage" src="" alt="Dish Image" />
-              <button type="button" id="shareVehicleFinalButton" class="share-button">Share</button>
+            <div class="entree-block">
+              <img src="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/Crescent+City+Shrimp+and+Grits.jpg"
+                   alt="Crescent City Shrimp and Grits – style 2">
+              <button class="share-entree-button"
+                      data-image="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/Crescent+City+Shrimp+and+Grits.jpg"
+                      data-entree="Crescent City Shrimp and Grits">Share This Photo</button>
             </div>
-          </details>
-          <details>
-            <summary>Review Image</summary>
-            <div class="share-image-container accordion-content">
-              <img id="finalReviewShareImage" src="" alt="Review Image" />
-              <button type="button" id="shareReviewFinalButton" class="share-button">Share</button>
+          </div>
+        </details>
+
+        <!-- Delta Blues Duck Breast -->
+        <details>
+          <summary>🎷 Delta Blues Duck Breast 🦆</summary>
+          <div class="entree-gallery">
+            <div class="entree-block">
+              <img src="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/Delta+Blues+Duck+Breast-customerStyle.jpg"
+                   alt="Delta Blues Duck Breast – style 1">
+              <button class="share-entree-button"
+                      data-image="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/Delta+Blues+Duck+Breast-customerStyle.jpg"
+                      data-entree="Delta Blues Duck Breast">Share This Photo</button>
             </div>
-          </details>
-        </div>
-        <textarea id="finalReviewText" placeholder="Your review will appear here..."></textarea>
-        <button type="button" id="copyReviewText">Copy Review Text</button>
-        <button type="button" id="backFromFinalOptions">← Back</button>
+            <div class="entree-block">
+              <img src="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/Delta+Blues+Duck+Breast.jpg"
+                   alt="Delta Blues Duck Breast – style 2">
+              <button class="share-entree-button"
+                      data-image="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/Delta+Blues+Duck+Breast.jpg"
+                      data-entree="Delta Blues Duck Breast">Share This Photo</button>
+            </div>
+          </div>
+        </details>
+
+        <!-- Sweet Georgia Brown Bread Pudding -->
+        <details>
+          <summary>🎷 Sweet Georgia Brown Bread Pudding 🍞🍮</summary>
+          <div class="entree-gallery">
+            <div class="entree-block">
+              <img src="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/Sweet+Georgia+Brown+Bread+Pudding-customerStyle.jpg"
+                   alt="Sweet Georgia Brown Bread Pudding – style 1">
+              <button class="share-entree-button"
+                      data-image="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/Sweet+Georgia+Brown+Bread+Pudding-customerStyle.jpg"
+                      data-entree="Sweet Georgia Brown Bread Pudding">Share This Photo</button>
+            </div>
+            <div class="entree-block">
+              <img src="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/Sweet+Georgia+Brown+Bread+Pudding.jpg"
+                   alt="Sweet Georgia Brown Bread Pudding – style 2">
+              <button class="share-entree-button"
+                      data-image="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/Sweet+Georgia+Brown+Bread+Pudding.jpg"
+                      data-entree="Sweet Georgia Brown Bread Pudding">Share This Photo</button>
+            </div>
+          </div>
+        </details>
+
+        <!-- The Bebop Blackened Salmon -->
+        <details>
+          <summary>🎷 The Bebop Blackened Salmon 🐟🔥</summary>
+          <div class="entree-gallery">
+            <div class="entree-block">
+              <img src="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/The+Bebop+Blackened+Salmon-customerStyle.jpg"
+                   alt="The Bebop Blackened Salmon – style 1">
+              <button class="share-entree-button"
+                      data-image="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/The+Bebop+Blackened+Salmon-customerStyle.jpg"
+                      data-entree="The Bebop Blackened Salmon">Share This Photo</button>
+            </div>
+            <div class="entree-block">
+              <img src="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/The+Bebop+Blackened+Salmon.jpg"
+                   alt="The Bebop Blackened Salmon – style 2">
+              <button class="share-entree-button"
+                      data-image="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/The+Bebop+Blackened+Salmon.jpg"
+                      data-entree="The Bebop Blackened Salmon">Share This Photo</button>
+            </div>
+          </div>
+        </details>
+
+        <!-- The Saxman’s Ribeye -->
+        <details>
+          <summary>🎷 The Saxman’s Ribeye 🥩🎶</summary>
+          <div class="entree-gallery">
+            <div class="entree-block">
+              <img src="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/The+Saxmans+Ribeye-customerStyle.jpg"
+                   alt="The Saxman’s Ribeye – style 1">
+              <button class="share-entree-button"
+                      data-image="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/The+Saxmans+Ribeye-customerStyle.jpg"
+                      data-entree="The Saxman’s Ribeye">Share This Photo</button>
+            </div>
+            <div class="entree-block">
+              <img src="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/The+Saxmans+Ribeye.jpg"
+                   alt="The Saxman’s Ribeye – style 2">
+              <button class="share-entree-button"
+                      data-image="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/The+Saxmans+Ribeye.jpg"
+                      data-entree="The Saxman’s Ribeye">Share This Photo</button>
+            </div>
+          </div>
+        </details>
+
       </div>
-    </section>
 
-  </div>
+      <button id="backFromGallery" class="backToOptions">← Back</button>
+    </div>
+  </section>
 
-  <footer id="pageFooter">
-    <span class="footer-version">Version r-1.0.0</span>
-  </footer>
+  <!-- ── STEP 3 • Entrée Share ─────────────────────────────────────── -->
+  <section id="vehicleSharePage" class="step">
+    <div class="form-section">
+      <h2>Share Your Entrée from Seb’s Crescent City Bistro</h2>
 
-  <!-- Include Cropper.js and our script.js -->
-  <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.js"></script>
-  <script src="script.js"></script>
+      <div class="share-image-container">
+        <div id="vehicleLoading" class="loading-overlay" style="display:none;">Updating…</div>
+        <img id="vehicleShareImage" src="" alt="Share Image">
+      </div>
+
+      <div class="customize-row" id="customizeRow">
+        <label for="customTextSelect">Select your Entrée&nbsp;</label>
+        <select id="customTextSelect">
+          <!-- Entrée options will be injected via JS -->
+        </select>
+        <input id="customTextInput" type="text" maxlength="20" placeholder="Enter custom text…" style="display:none;">
+        <button id="applyTextButton" type="button" class="small-btn" style="display:none;">Apply</button>
+      </div>
+
+      <button id="shareNowButton" class="share-button">Share Photo</button>
+      <button id="forwardFromVehicleShare" class="advance-btn">I Already Shared This ›</button>
+      <button id="backFromVehicleShare">← Back</button>
+    </div>
+  </section>
+
+  <!-- ── STEP 4 • Review Form ──────────────────────────────────────── -->
+  <section id="reviewFormPage" class="step">
+    <div class="form-section">
+
+      <div class="business-images review-header">
+        <img class="biz-owner" src="https://f000.backblazeb2.com/file/EmbrFyr/Restaurant-Demo/Sebs-Crescent-City-Bistro-Logo+_500x500.jpg"
+             alt="Seb’s Crescent City Bistro Logo">
+        <img class="biz-product" id="reviewPreviewImage" src="" alt="Entrée Preview">
+      </div>
+
+      <h2 id="reviewFormHeading">Write a Quick Review for Seb’s Crescent City Bistro</h2>
+
+      <div class="star-rating" id="reviewStarRating">
+        <span data-value="1">&#9733;</span><span data-value="2">&#9733;</span><span data-value="3">&#9733;</span><span data-value="4">&#9733;</span><span data-value="5">&#9733;</span>
+      </div>
+
+      <textarea id="reviewText" placeholder="Write your review here (max 230 characters)" maxlength="230"></textarea>
+      <div id="charCount">230 characters left</div>
+
+      <p class="name-helper"><strong>Your Name</strong> – First, First & Last, or just a nickname</p>
+      <input id="reviewerName" class="name-input" type="text"
+             placeholder="Your Name (This will go on your review image)" required>
+
+      <button id="submitReviewForm" type="button">Create Review Share Image</button>
+      <button id="backFromReviewForm" type="button">← Back</button>
+    </div>
+  </section>
+
+  <!-- ── STEP 5 • Review Share ─────────────────────────────────────── -->
+  <section id="reviewSharePage" class="step">
+    <div class="form-section">
+      <h2 id="reviewShareHeading">Share Your Review of Seb’s Crescent City Bistro</h2>
+      <div class="share-image-container">
+        <div id="reviewLoading" class="loading-overlay" style="display:none;">Loading…</div>
+        <img id="reviewShareImage" src="" alt="Review Share Image">
+      </div>
+      <button id="reviewShareButton" class="share-button">Share Photo</button>
+      <button id="forwardFromReviewShare" class="advance-btn">I Already Shared This ›</button>
+      <button id="backFromReviewShare">← Back</button>
+    </div>
+  </section>
+
+  <!-- ── STEP 6 • Google Review ────────────────────────────────────── -->
+  <section id="googleReviewPage" class="step">
+    <div class="form-section">
+      <h2>One Last Thing: Please Paste Your Review on Google</h2>
+      <button id="googleReviewButton" type="button" class="share-button google-btn">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/39/Google_Maps_icon_%282015-2020%29.svg"
+             alt="Google Logo" class="google-logo">
+        Post Review on Google
+      </button>
+      <button id="backFromGoogleReview"   type="button">← Back</button>
+      <button id="forwardFromGoogleReview" type="button">Forward ›</button>
+    </div>
+  </section>
+
+  <!-- ── STEP 7 • Final Options ────────────────────────────────────── -->
+  <section id="finalOptionsPage" class="step">
+    <div class="form-section">
+      <h2>Wow! Thanks for Supporting Seb’s Crescent City Bistro.</h2>
+      <p>You can always save or post these again later:</p>
+
+      <div class="accordion">
+        <details>
+          <summary>Entrée Share Image</summary>
+          <div class="share-image-container accordion-content">
+            <img id="finalVehicleShareImage" src="" alt="Entrée Share Image">
+            <button id="shareVehicleFinalButton" class="share-button">Share Image</button>
+          </div>
+        </details>
+        <details>
+          <summary>Review Share Image</summary>
+          <div class="share-image-container accordion-content">
+            <img id="finalReviewShareImage" src="" alt="Review Share Image">
+            <button id="shareReviewFinalButton" class="share-button">Share Image</button>
+          </div>
+        </details>
+      </div>
+
+      <p class="review-copy-label">Your review – feel free to update it as you like (no character limit)</p>
+      <textarea id="finalReviewText" placeholder="Your review will appear here…"></textarea>
+      <button id="copyReviewText" type="button">Copy Review Text</button>
+
+      <button id="savePageButton"       type="button">Save This Page</button>
+      <button id="remindLaterButton"    type="button">Remind Me to Share This Again Later</button>
+
+      <p class="want-this-later">Want this page later?</p>
+      <button id="textLinkFinal"  type="button">Text Me a Link</button>
+      <button id="emailLinkFinal" type="button">Email Me a Link</button>
+
+      <button id="backFromFinalOptions" type="button">← Back</button>
+    </div>
+  </section>
+
+  <!-- ── STEP 8 • QR (unchanged) ───────────────────────────────────── -->
+  <section id="qrSharePage" class="step">
+    <div class="form-section">
+      <h2>Scan to Share</h2>
+      <p class="qr-link">justshar.ing/xyz</p>
+      <div class="qr-container"><img id="qrCodeImage" src="" alt="QR Code"></div>
+      <button id="backFromQR" type="button">← Back</button>
+    </div>
+  </section>
+
+</div>
+
+<footer id="pageFooter"><span class="footer-version">Version r-1.0.0</span></footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.js"></script>
+<script src="scripts.js"></script>
 </body>
 </html>

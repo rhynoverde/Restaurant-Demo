@@ -1,291 +1,171 @@
-/* styles.css */
-/* Base Reset and Mobile-Friendly Layout */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  body {
-    background-color: #f4f4f4;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    min-height: 100vh;
-  }
-  
-  /* Footer */
-  #pageFooter {
-    width: 100%;
-    padding: 10px;
-    text-align: center;
-    background: #eee;
-    font-size: 14px;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-  }
-  .footer-version {
-    color: #555;
-  }
-  
-  /* Main Container */
-  .container {
-    background-color: #fff;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 600px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    margin-top: 10px;
-    margin-bottom: 60px;
-  }
-  
-  /* Form Sections */
-  .form-section {
-    padding: 20px;
-  }
-  h2 {
-    font-size: 20px;
-    margin-bottom: 15px;
-    text-align: center;
-  }
-  
-  /* Photo Options */
-  .photo-options {
-    display: block;
-  }
-  .photo-option {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    margin: 10px 0;
-    padding: 15px;
-    background-color: #007BFF;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    font-size: 18px;
-    cursor: pointer;
-    text-align: left;
-  }
-  .photo-option .icon {
-    margin-right: 10px;
-    font-size: 24px;
-  }
-  .photo-option:hover {
-    background-color: #005bb5;
-  }
-  
-  /* Hide file input */
-  #uploadInput {
-    opacity: 0;
-    position: absolute;
-    left: -9999px;
-  }
-  .upload-label {
-    background-color: #007BFF;
-    color: #fff;
-    display: block;
-    padding: 15px;
-    text-align: center;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    cursor: pointer;
-  }
-  
-  /* Buttons */
-  button {
-    background-color: #4CAF50;
-    color: #fff;
-    border: none;
-    padding: 15px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 4px;
-    width: 100%;
-    margin-bottom: 15px;
-    transition: background-color 0.3s ease;
-  }
-  button:hover {
-    background-color: #45A049;
-  }
-  button:active {
-    background-color: #39843C;
-  }
-  
-  /* Photo Sections */
-  .photo-section {
-    margin-top: 15px;
-  }
-  #cameraContainer {
-    position: relative;
-    width: 400px;
-    height: 260px;
-    margin: 100px auto 15px;
-    background: #000;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  #cameraPreview {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform-origin: center center;
-    touch-action: none;
-  }
-  #cameraOverlay .hole {
-    display: none;
-  }
-  .zoom-indicator {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.5);
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 4px;
-  }
-  
-  /* Camera Controls */
-  .camera-controls {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-top: 10px;
-  }
-  .icon-btn {
-    width: 50px;
-    height: 50px;
-    background-color: rgba(128,128,128,0.7);
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #fff;
-    border-radius: 50%;
-    transition: background-color 0.3s ease;
-  }
-  .icon-btn:hover {
-    background-color: rgba(128,128,128,0.9);
-  }
-  .shutter-btn {
-    width: 70px;
-    height: 70px;
-    background-color: #fff;
-    border: 5px solid #ccc;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  .shutter-btn:active {
-    background-color: #ccc;
-  }
-  
-  /* Cropping Section */
-  #cropContainer {
-    width: 300px;
-    height: 194px;
-    margin: 0 auto 15px;
-    border: 2px solid #ddd;
-    border-radius: 4px;
-    overflow: hidden;
-    position: relative;
-  }
-  #cropImage {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-  .crop-buttons button {
-    width: auto;
-    margin: 5px;
-  }
-  
-  /* Share Image Container */
-  .share-image-container {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  .share-image-container img {
-    max-width: 100%;
-    border: 2px solid #ddd;
-    border-radius: 4px;
-  }
-  .share-button {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    padding: 15px;
-    font-size: 16px;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-bottom: 20px;
-  }
-  .share-button:hover {
-    background-color: #005bb5;
-  }
-  
-  /* Star Rating */
-  .star-rating {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 15px;
-  }
-  .star-rating span {
-    font-size: 30px;
-    cursor: pointer;
-    color: #ccc;
-    margin: 0 2px;
-    transition: color 0.3s;
-  }
-  .star-rating span.selected {
-    color: gold;
-  }
-  
-  /* Review Text */
-  textarea {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    resize: vertical;
-  }
-  #charCount {
-    text-align: right;
-    font-size: 14px;
-    margin-bottom: 15px;
-  }
-  #charCount.red {
-    color: red;
-  }
-  
-  /* Accordion for Final Options */
-  .accordion details {
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    padding: 10px;
-  }
-  .accordion summary {
-    font-weight: bold;
-    cursor: pointer;
-    outline: none;
-  }
-  .accordion .accordion-content {
-    margin-top: 10px;
-  }
-  
-  /* Steps */
-  .step {
-    display: none;
-  }
-  .step.active {
-    display: block;
-  }
-  
+/*  styles.css  – Restaurant Demo  (Version r-1.0.0)
+   =============================================================== */
+
+/* ── design tokens ─────────────────────────────────────────────── */
+:root{
+  /* elegant dark-brass palette (drawn from #553501 background) */
+  --accent:      #553501;      /* primary button / accent */
+  --accent-dark: #452a01;
+  --accent-d2:   #352001;
+
+  --blue:        #004085;      /* secondary buttons (camera etc.) */
+  --blue-dark:   #002c5d;
+
+  --light-bg:    #f8f6f3;      /* overall app back-ground */
+  --dark-text:   #332a25;
+}
+
+/* ── reset / layout ─────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--light-bg);
+  font-family:'Helvetica Neue',Arial,sans-serif;
+  color:var(--dark-text);
+  display:flex;flex-direction:column;align-items:center;
+  padding:10px;min-height:100vh;
+}
+.container{
+  background:#fff;border-radius:8px;width:100%;max-width:600px;
+  max-height:90vh;overflow-y:auto;
+  box-shadow:0 4px 8px rgba(0,0,0,.12);
+  margin:10px 0 60px;
+}
+.step{display:none}.step.active{display:block}
+
+/* ── footer ─────────────────────────────────────────────────────── */
+#pageFooter{
+  width:100%;padding:10px;text-align:center;background:#eee;
+  font-size:14px;position:fixed;bottom:0;left:0
+}
+.footer-version{color:#555}
+
+/* ── business hero (step-1) ─────────────────────────────────────── */
+.business-images{position:relative;width:100%;height:300px;margin-bottom:35px}
+.biz-logo{position:absolute;top:50%;left:5%;width:20%;transform:translateY(-50%);
+  border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.2);object-fit:cover}
+.biz-owner{position:absolute;top:50%;left:50%;width:40%;transform:translate(-50%,-50%);
+  border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.2);object-fit:contain;z-index:2}
+.biz-product{position:absolute;top:50%;right:5%;width:20%;transform:translateY(-50%);
+  border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.2);object-fit:cover}
+.business-tagline{text-align:center;margin-bottom:25px;font-size:22px;color:var(--accent)}
+
+/* review header (logo + entrée preview) */
+.review-header{height:260px;margin-bottom:15px}
+.review-header .biz-owner{width:30%}
+.review-header .biz-product{width:30%}
+
+/* ── headings ───────────────────────────────────────────────────── */
+h2{font-size:20px;margin-bottom:15px;text-align:center}
+.minor-title{font-size:18px;margin:10px 0 15px;text-align:center;font-weight:600}
+
+/* ── buttons / inputs ───────────────────────────────────────────── */
+button{
+  background:var(--accent);color:#fff;border:none;padding:15px;font-size:16px;
+  cursor:pointer;border-radius:4px;width:100%;margin-bottom:15px;
+  transition:background-color .25s ease
+}
+button:hover{background:var(--accent-dark)}
+button:active{background:var(--accent-d2)}
+.small-btn{width:auto;padding:8px 12px;font-size:14px;margin-top:8px}
+.advance-btn{font-size:15px}
+.upload-label{
+  display:block;width:100%;text-align:center;padding:15px;
+  background:var(--blue);color:#fff;border-radius:4px;margin-bottom:15px;
+  cursor:pointer
+}
+.upload-label:hover{background:var(--blue-dark)}
+.google-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  background:#fff;color:#4285f4;border:2px solid #4285f4;
+}
+.google-btn:hover{background:#f1f5ff}
+.google-btn img.google-logo{width:22px;height:22px}
+
+/* ── inputs / textareas ─────────────────────────────────────────── */
+textarea{
+  width:100%;padding:12px;font-size:16px;border:1px solid #ccc;border-radius:4px;
+  margin-bottom:5px;resize:vertical;font-family:'Helvetica Neue',Arial,sans-serif;
+}
+#reviewerName{
+  width:100%;padding:12px;font-size:16px;border:1px solid #ccc;border-radius:4px;
+  margin-bottom:15px;font-family:'Helvetica Neue',Arial,sans-serif;
+}
+.name-input{height:48px}
+.name-helper{margin:30px 0 10px;font-size:14px;text-align:center}
+
+/* character countdown */
+#charCount{margin-top:0;text-align:center;font-size:14px;color:#666;width:100%}
+#charCount.red{color:#d00}
+
+/* ── photo option tiles ─────────────────────────────────────────── */
+.photo-options{display:block}
+.photo-option{
+  display:flex;align-items:center;padding:15px;background:var(--blue);
+  color:#fff;border-radius:4px;margin:10px 0;cursor:pointer
+}
+.photo-option:hover{background:var(--blue-dark)}
+.photo-option .icon{font-size:24px;margin-right:10px}
+
+/* ── camera ─────────────────────────────────────────────────────── */
+#cameraContainer{position:relative;width:100%;max-width:400px;height:260px;margin:50px auto 15px;background:#000;border-radius:4px;overflow:hidden}
+#cameraPreview{width:100%;height:100%;object-fit:cover;touch-action:none}
+.zoom-indicator{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.5);color:#fff;padding:5px 10px;border-radius:4px}
+.camera-controls{display:flex;justify-content:space-around;margin-top:10px}
+.icon-btn{width:50px;height:50px;background:rgba(128,128,128,.7);border-radius:50%;font-size:24px;color:#fff}
+.icon-btn:hover{background:rgba(128,128,128,.9)}
+.flash-on{background:#b8860b}
+.shutter-btn{width:70px;height:70px;background:#fff;border:5px solid #ccc;border-radius:50%}
+.shutter-btn:active{background:#ccc}
+
+/* ── cropper container ──────────────────────────────────────────── */
+#cropContainer{width:300px;height:194px;margin:0 auto 15px;border:2px solid #ddd;border-radius:4px;overflow:hidden}
+
+/* ── share-image boxes ──────────────────────────────────────────── */
+.share-image-container{position:relative;text-align:center;margin-bottom:20px}
+.share-image-container img{
+  max-width:100%;border:2px solid #ddd;border-radius:4px;min-height:194px;
+}
+.loading-overlay{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  background:rgba(255,255,255,.86);display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:600;border-radius:4px;animation:fadeDots 1.2s infinite;
+  pointer-events:none
+}
+@keyframes fadeDots{0%{opacity:.3}50%{opacity:1}100%{opacity:.3}}
+
+/* customise row */
+.customize-row{display:flex;align-items:center;gap:6px;margin:15px 0;flex-wrap:wrap}
+.customize-row select,.customize-row input{
+  padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px
+}
+#customTextInput{display:none}
+#applyTextButton{display:none}
+
+/* ── star rating ─────────────────────────────────────────────────── */
+.star-rating{display:flex;justify-content:center;margin-bottom:15px}
+.star-rating span{font-size:30px;cursor:pointer;color:#ccc;margin:0 2px;transition:color .25s}
+.star-rating span.selected{color:gold}
+
+/* ── accordion (gallery & final options) ─────────────────────────── */
+.accordion details{border:1px solid #ddd;border-radius:4px;margin-bottom:10px;padding:10px}
+.accordion summary{font-weight:600;cursor:pointer}
+.entree-gallery{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
+.entree-block{flex:1 1 calc(50% - 10px);text-align:center}
+.entree-block img{width:100%;border-radius:4px;border:2px solid #eee;object-fit:cover}
+.entree-block button{margin-top:8px}
+
+/* ── QR ──────────────────────────────────────────────────────────── */
+.qr-container{text-align:center;margin:20px 0}
+.qr-container img{max-width:150px}
+
+/* utility */
+.want-this-later{margin:20px 0 10px;font-weight:600;text-align:center}
+
+/* mobile tweaks */
+@media(max-width:375px){
+  .business-images{height:240px}
+  #cameraContainer{height:220px}
+}
+
+/* hide file input */
+#uploadInput{display:none}
